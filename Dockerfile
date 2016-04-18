@@ -32,7 +32,7 @@ WORKDIR /pg
 ENV CFLAGS -O0
 RUN git clone https://github.com/postgrespro/postgres_cluster.git --depth 1
 WORKDIR /pg/postgres_cluster
-RUN ./configure  --enable-cassert --enable-debug
+RUN ./configure  --enable-cassert --enable-debug --prefix=/usr/local/
 RUN make -j 4
 
 USER root
@@ -42,6 +42,7 @@ RUN cd /pg/postgres_cluster/contrib/raftable && make install
 RUN cd /pg/postgres_cluster/contrib/mmts && make install
 RUN cd /pg/postgres_cluster/contrib/postgres_fdw && make install
 RUN mkdir -p /var/lib/postgresql/data && chown -R postgres /var/lib/postgresql/data
+RUN mkdir -p /run/postgresql && chown -R postgres /run/postgresql
 
 USER postgres
 ENV PATH /usr/local/bin:$PATH
